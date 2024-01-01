@@ -25,7 +25,6 @@ std::map<std::string, PlayerAndMatchStats> playerStats;
 //Set up
 void GameLogger::onLoad() {
 
-
     //
 	_globalCvarManager = cvarManager;
 
@@ -151,9 +150,8 @@ void GameLogger::updatePlayerStats() {
         std::string name = player.GetPlayerName().ToString();
 
         //get the club name (formatted as [tag] name)
-        //ClubDetailsWrapper clubDetails = player.GetClubDetails();
-        //std::string club = "[" + clubDetails.GetClubTag().ToString() + "] " + clubDetails.GetClubName().ToString();
-        std::string club = "";
+        ClubDetailsWrapper clubDetails = player.GetClubDetails();
+        std::string club = ((clubDetails.IsNull() == false) ? "[" + clubDetails.GetClubTag().ToString() + "] " + clubDetails.GetClubName().ToString() : "");
 
         //calculate the mmr for each player
         int mmr = 0;
