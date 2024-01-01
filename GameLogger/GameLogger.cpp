@@ -72,7 +72,7 @@ void GameLogger::onMatchEnded(std::string eventName) {
     //
     if (!std::filesystem::exists(filename)) {
         csv.open(filename, std::fstream::out);
-        csv << "Timestamp,Game mode,Team,Player,Score,Goals,Own Goals,Assists,Saves,Shots,Demos,Damage,MVP,Team Score,Win,MMR\n";
+        csv << "Timestamp,Game mode,Team,Player,Club,MMR,Score,Goals,Own Goals,Assists,Saves,Shots,Demos,Damage,MVP\n";
         csv.close();
     }
 
