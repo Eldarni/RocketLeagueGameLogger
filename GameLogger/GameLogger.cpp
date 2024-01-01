@@ -145,7 +145,7 @@ void GameLogger::updatePlayerStats() {
         std::string playerID = player.GetUniqueIdWrapper().GetIdString();
 
         //
-        std::string team = ((player.GetTeamNum() == 0) ? "Orange" : "Blue");
+        std::string team = ((player.GetTeamNum() == 0) ? "Blue" : "Orange");
 
         //get the players name
         std::string name = player.GetPlayerName().ToString();
