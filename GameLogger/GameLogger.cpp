@@ -11,8 +11,11 @@
 //
 #include "GameLogger.h"
 
-//
-BAKKESMOD_PLUGIN(GameLogger, "Log game stats to CSV", plugin_version, PLUGINTYPE_FREEPLAY)
+//Plugin setup
+BAKKESMOD_PLUGIN(GameLogger, "Game Logger Plugin", plugin_version, PLUGINTYPE_FREEPLAY);
+std::string GameLogger::GetPluginName() {
+    return "Game Logger Plugin";
+}
 
 //
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
@@ -27,7 +30,7 @@ void GameLogger::onLoad() {
 	_globalCvarManager = cvarManager;
 
     //
-    cvarManager->registerCvar("gamelogger_filename", gameWrapper->GetBakkesModPath().string() + "\\game-logger.csv", "Where should we save the file to. Use \"\\\" as path seperator", true, false, 0, false, 0, true);
+    cvarManager->registerCvar("gamelogger_filename", gameWrapper->GetBakkesModPath().string() + "\\game-logger.csv", "Game Logger CSV File", true, false, 0, false, 0, true);
 
     //update the player stats every kickoff - should deal with most issues around players leaving (won't be perfect but the only other option will be per tick)
     gameWrapper->HookEvent("Function GameEvent_Soccar_TA.Active.StartRound", [this](std::string eventName) {
@@ -187,4 +190,31 @@ void GameLogger::updatePlayerStats() {
 
     }
 
+}
+
+//Display the settings screen
+void GameLogger::RenderSettings() {
+    if (cvarManager->getCvar("gamelogger_filename")) {
+
+        //
+        CVarWrapper filenameCvar = cvarManager->getCvar("gamelogger_filename");
+        std::string filenameValue = filenameCvar.getStringValue();
+
+        //replace "\\" with "\"
+        while (filenameValue.find("\\\\") != std::string::npos) {
+            filenameValue.replace(filenameValue.find("\\\\"), 2, "\\");
+        }
+
+        //
+        if (ImGui::InputText("Save Path", &filenameValue)) {
+            filenameCvar.setValue(filenameValue);
+        }
+        ImGui::TextUnformatted("Where should the output be saved, Use \"\\\" as path seperator, defaults to your BakkesMod folder.");
+
+    }
+}
+
+//needed to display the settings (copied from examples)
+void GameLogger::SetImGuiContext(uintptr_t ctx) {
+    ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
 }

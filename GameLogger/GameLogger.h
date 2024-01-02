@@ -29,13 +29,18 @@ typedef struct {
 } PlayerAndMatchStats;
 
 //
-class GameLogger : public BakkesMod::Plugin::BakkesModPlugin {
+class GameLogger : public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow {
 
 public:
 
     //
 	void onLoad() override;
 	void onUnload() override;
+
+    //
+    void RenderSettings() override;
+    std::string GetPluginName() override;
+    void SetImGuiContext(uintptr_t ctx) override;
 
 private:
     
