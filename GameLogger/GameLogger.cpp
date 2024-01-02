@@ -41,6 +41,7 @@ void GameLogger::onLoad() {
 
 //Tidy up
 void GameLogger::onUnload() {
+    gameWrapper->UnhookEvent("Function GameEvent_Soccar_TA.Active.StartRound");
     gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.OnMatchEnded");
 }
 
