@@ -4,6 +4,7 @@
 
 //
 #include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 
@@ -16,9 +17,6 @@ BAKKESMOD_PLUGIN(GameLogger, "Log game stats to CSV", plugin_version, PLUGINTYPE
 //
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
-//@todo: get this from cvar
-std::string filename = "C:\\SCRAP\\GameLogger.csv";
-
 //prepare a map for the player stats
 std::map<std::string, PlayerAndMatchStats> playerStats;
 
@@ -27,6 +25,9 @@ void GameLogger::onLoad() {
 
     //
 	_globalCvarManager = cvarManager;
+
+    //
+    cvarManager->registerCvar("gamelogger_filename", gameWrapper->GetBakkesModPath().string() + "\\game-logger.csv", "Where should we save the file to. Use \"\\\" as path seperator", true, false, 0, false, 0, true);
 
     //update the player stats every kickoff - should deal with most issues around players leaving (won't be perfect but the only other option will be per tick)
     gameWrapper->HookEvent("Function GameEvent_Soccar_TA.Active.StartRound", [this](std::string eventName) {
@@ -66,13 +67,22 @@ void GameLogger::onMatchEnded(std::string eventName) {
     }
 
     //
-    std::fstream csv;
+    std::fstream csv;   
+
+    //
+    std::string filename = cvarManager->getCvar("gamelogger_filename").getStringValue();
 
     //
     if (!std::filesystem::exists(filename)) {
+
+        //
+        std::filesystem::create_directories(filename.substr(0, filename.rfind("\\")));
+
+        //
         csv.open(filename, std::fstream::out);
         csv << "Timestamp,Game mode,Team,Player,Club,MMR,Score,Goals,Own Goals,Assists,Saves,Shots,Demos,Damage,MVP\n";
         csv.close();
+
     }
 
     //
