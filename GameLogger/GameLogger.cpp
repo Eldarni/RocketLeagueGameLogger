@@ -97,11 +97,11 @@ void GameLogger::onMatchEnded(std::string eventName) {
 
     //
     for (auto const& [playerID, playerStats] : playerStats) {
-        
+
         //
-        ss << timestamp << "," << gameMode << "," << playerStats.team << "," << playerStats.name << "," << playerStats.club << "," << playerStats.mmr << "," << playerStats.score << "," << playerStats.goals << "," << playerStats.ownGoals << "," << playerStats.assists << "," << playerStats.saves << "," << playerStats.shots << "," << playerStats.demos << "," << playerStats.damage << "," << playerStats.mvp << "\n";
+        ss << timestamp << "," << gameMode << "," << ((playerStats.team == sw.GetWinningTeam().GetTeamNum()) ? "won" : "lost") << "," << playerStats.name << "," << playerStats.club << "," << playerStats.mmr << "," << playerStats.score << "," << playerStats.goals << "," << playerStats.ownGoals << "," << playerStats.assists << "," << playerStats.saves << "," << playerStats.shots << "," << playerStats.demos << "," << playerStats.damage << "," << playerStats.mvp << "\n";
         csv << ss.str();
-        
+
         //empty the string
         ss.str(std::string());
 
@@ -158,7 +158,7 @@ void GameLogger::updatePlayerStats() {
         std::string playerID = player.GetUniqueIdWrapper().GetIdString();
 
         //
-        std::string team = ((player.GetTeamNum() == 0) ? "Blue" : "Orange");
+        int team = player.GetTeamNum();
 
         //get the players name
         std::string name = player.GetPlayerName().ToString();

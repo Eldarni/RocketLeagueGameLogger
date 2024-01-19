@@ -13,7 +13,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 //main player stats
 typedef struct {
-    std::string team;
+    int team;
     std::string name;
     std::string club;
     int mmr;
