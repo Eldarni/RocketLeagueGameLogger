@@ -49,6 +49,7 @@ private:
 
     //
     std::string getTimestamp(std::string format);
+    int getPlayerMMR(MMRWrapper mw, PriWrapper player, int gameMode);
     void updatePlayerStats();
  
 };

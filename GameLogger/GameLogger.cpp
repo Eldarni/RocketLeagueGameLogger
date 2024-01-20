@@ -131,6 +131,14 @@ std::string GameLogger::getTimestamp(std::string format) {
 
 }
 
+//get the mmr for the player
+int GameLogger::getPlayerMMR(MMRWrapper mw, PriWrapper player, int gameMode) {
+    if (mw.IsSynced(player.GetUniqueIdWrapper(), gameMode)) {
+        return std::round(mw.GetPlayerMMR(player.GetUniqueIdWrapper(), gameMode));
+    }
+    return 0;
+}
+
 //update the player stats map
 void GameLogger::updatePlayerStats() {
 
@@ -167,12 +175,8 @@ void GameLogger::updatePlayerStats() {
         ClubDetailsWrapper clubDetails = player.GetClubDetails();
         std::string club = ((clubDetails.IsNull() == false) ? "[" + clubDetails.GetClubTag().ToString() + "] " + clubDetails.GetClubName().ToString() : "");
 
-        //calculate the mmr for each player
-        int mmr = 0;
-        int currentPlaylist = mw.GetCurrentPlaylist();
-        if (mw.IsSynced(player.GetUniqueIdWrapper(), currentPlaylist)) {
-            mmr = std::round(mw.GetPlayerMMR(player.GetUniqueIdWrapper(), currentPlaylist));
-        }
+        //get the mmr for the player in the current playlist
+        int mmr = getPlayerMMR(mw, player, mw.GetCurrentPlaylist());
 
         //now for how well they did in the match
         int score    = player.GetMatchScore();
